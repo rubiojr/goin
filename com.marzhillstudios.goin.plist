@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.marzhillstudios.goin</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/changme/lib/go/bin/goin</string>
+    <string>--hash_location</string>
+      <string>/Users/changme/.goin/indexed_files</string>
+    <string>--index_location</string>
+      <string>/Users/changme/.goin/bleve</string>
+    <string>--tess_data_prefix</string>
+      <string>/opt/brew/share</string>
+    <string>--pdfdensity</string>
+      <string>600</string>
+    <string>--mime</string>
+      <string>.go=text/go-src</string>
+    <string>--mime</string>
+      <string>.jl=text/julia-src</string>
+    <string>--mime</string>
+      <string>.tex=text/tex-src</string>
+    <string>--mime</string>
+      <string>.sh=text/shell-src</string>
+    <string>--mime</string>
+      <string>.hoon=text/hoon-src</string>
+    <string>--mime</string>
+      <string>.hook=text/hoon-src</string>
+    <string>--index</string>
+      <string>/Users/changme/Documents</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>23</integer>
+    <key>Minute</key>
+    <integer>18</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>/Users/changme/.goin/index.err.log</string>
+  <key>StandardErrPath</key>
+  <string>/Users/changme/.goin/index.out.log</string>
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>
