@@ -52,9 +52,9 @@ func formatFragment(frag string) string {
 	lines := strings.Split(content, "\n")
 	rv := ""
 	for _, l := range lines {
-		rv += fmt.Sprintf("\t> %s\n", l)
+		rv += fmt.Sprintf(" %s", l)
 	}
-	return rv + fmt.Sprintln("-----------------")
+	return rv
 }
 
 func usage() string {
@@ -101,10 +101,10 @@ func main() {
 			os.Exit(1)
 		}
 		for i, match := range result.Hits {
-			fmt.Println("-----------------")
+			fmt.Println("")
 			fmt.Printf("%d. %q (%f)\n", i+1, match.ID, match.Score)
 			for field, fragments := range match.Fragments {
-				fmt.Printf("%s:\n", field)
+				fmt.Printf("%s: ", field)
 				for _, frag := range fragments {
 					fmt.Println(formatFragment(frag))
 				}
@@ -117,7 +117,7 @@ func main() {
 			}
 		}
 		// TODO(jwall): handle facet outputs?
-		fmt.Printf("Total results: %d Retrieved %d to %d in %s.\n", result.Total, result.Request.From+1, result.Request.From+len(result.Hits), result.Took)
+		fmt.Printf("\nTotal results: %d Retrieved %d to %d in %s.", result.Total, result.Request.From+1, result.Request.From+len(result.Hits), result.Took)
 		return
 	} else if *isIndex {
 		p := NewProcessor(*hashLocation, index, *force)
