@@ -62,7 +62,7 @@ func getPixImage(f string) (*lpt.Pix, error) {
 		if cmdName, err := exec.LookPath("convert"); err == nil {
 			tmpFName := filepath.Join(os.TempDir(), filepath.Base(f)+".tif")
 			log.Printf("converting %q to %q", f, tmpFName)
-			cmd := exec.Command(cmdName, "-density", fmt.Sprint(*pdfDensity), f, "-depth", "8", tmpFName)
+			cmd := exec.Command(cmdName, "-background", "white", "-flatten", "+matte", "-density", fmt.Sprint(*pdfDensity), f, "-depth", "8", tmpFName)
 			out, err := cmd.CombinedOutput()
 			if err != nil {
 				log.Printf("output: %q", out)
