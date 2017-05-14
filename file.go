@@ -80,7 +80,7 @@ func getPixImage(f string) (*lpt.Pix, error) {
 func ocrImageFile(file string) (string, error) {
 	// Create new tess instance and point it to the tessdata location.
 	// Set language to english.
-	t, err := gts.NewTess(filepath.Join(*tessData, "tessdata"), "eng")
+	t, err := gts.NewTess(filepath.Join(*tessData, "tessdata"), *tesseractLang)
 	if err != nil {
 		log.Fatalf("Error while initializing Tess: %s\n", err)
 	}
