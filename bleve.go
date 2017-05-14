@@ -10,10 +10,10 @@ import (
 	"strings"
 
 	"github.com/blevesearch/bleve"
-	"github.com/blevesearch/bleve/mapping"
 	"github.com/blevesearch/bleve/analysis"
 	"github.com/blevesearch/bleve/analysis/char/html"
 	"github.com/blevesearch/bleve/analysis/lang/en"
+	"github.com/blevesearch/bleve/mapping"
 	"github.com/blevesearch/bleve/registry"
 	"github.com/blevesearch/bleve/search/highlight/highlighter/ansi"
 )
