@@ -17,9 +17,18 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fatih/color"
 	lpt "gopkg.in/GeertJohan/go.leptonica.v1"
 	gts "gopkg.in/GeertJohan/go.tesseract.v1"
 )
+
+var (
+	red = color.New(color.FgRed).SprintFunc()
+)
+
+func printError(err string, args ...interface{}) error {
+	return fmt.Errorf(red("error: ")+err, args...)
+}
 
 func init() {
 	// Ensure that org-mode is registered as a mime type.
@@ -57,11 +66,11 @@ func getPixImage(f string) (*lpt.Pix, error) {
 			out, err := cmd.CombinedOutput()
 			if err != nil {
 				log.Printf("output: %q", out)
-				return nil, fmt.Errorf("Error converting pdf with %q err: %v", cmd.Args, err)
+				return nil, printError("converting pdf with %q err: %v", cmd.Args, err)
 			}
 			f = tmpFName
 		} else {
-			return nil, fmt.Errorf("Unable to find convert binary %v", err)
+			return nil, printError("Unable to find convert binary %v", err)
 		}
 	}
 	log.Printf("getting pix from %q", f)
@@ -79,7 +88,7 @@ func ocrImageFile(file string) (string, error) {
 
 	pix, err := getPixImage(file)
 	if err != nil {
-		return "", fmt.Errorf("Error while getting pix from file: %s (%s)", file, err)
+		return "", printError("while getting pix from file: %s (%s)", file, err)
 	}
 	defer pix.Close()
 
@@ -88,7 +97,7 @@ func ocrImageFile(file string) (string, error) {
 	// TODO(jwall): What is this even?
 	err = t.SetVariable("tessedit_char_whitelist", ` !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~`+"`")
 	if err != nil {
-		return "", fmt.Errorf("Failed to set variable: %s\n", err)
+		return "", printError("Failed to set variable: %s\n", err)
 	}
 
 	t.SetImagePix(pix)
@@ -257,14 +266,14 @@ func (p *processor) finishFile(file string) error {
 // false, error if it should not be processed.
 func (p *processor) ShouldProcess(file string) (bool, error) {
 	if strings.HasPrefix(file, ".") {
-		return false, fmt.Errorf("Not processing hidden file %q", file)
+		return false, printError("not processing hidden file %q", file)
 	}
 	fi, err := os.Stat(file)
 	if _, mt, ok := p.checkMimeType(file); !ok {
-		return ok, fmt.Errorf("Unhandled FileType: %q", mt)
+		return ok, printError("unhandled FileType: %q", mt)
 	}
 	if p.force && fi.Size() > *maxFileSize {
-		return false, fmt.Errorf("File too large to index %q size=(%d)", file, fi.Size())
+		return false, printError("file too large to index %q size=(%d)", file, fi.Size())
 	}
 
 	h, err := hashFile(file)
@@ -316,7 +325,7 @@ func (p *processor) Process(file string) error {
 			return err
 		}
 	} else {
-		return fmt.Errorf("Unhandled file format %q", mt)
+		return printError("unhandled file format %q", mt)
 	}
 
 	parts := strings.SplitN(mt, "/", 2)
