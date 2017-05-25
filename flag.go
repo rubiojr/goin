@@ -36,6 +36,7 @@ func mimeFlag(name, usage string) StringMapFlag {
 var homeDir, _ = homedir.Dir()
 
 var tessData = flag.String("tess_data_prefix", defaultTessData(), "Location of the tesseract data.")
+var tessDebugFile = flag.String("tess-debug-file", "/dev/null", "Write tesseract debug output to file.")
 var help = flag.Bool("help", false, "Show this help.")
 var pdfDensity = flag.Int("pdfdensity", 300, "density to use when converting pdf's to tiffs.")
 var tesseractLang = flag.String("lang", "eng", "Tesseract language to use.")

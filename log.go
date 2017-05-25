@@ -7,3 +7,12 @@ func Debugf(msg string, args ...interface{}) {
 		fmt.Printf(msg+"\n", args...)
 	}
 }
+
+func printError(err string, args ...interface{}) error {
+	if *isDebug {
+		return fmt.Errorf(red("error: ")+err, args...)
+	} else {
+		fmt.Printf("X")
+		return nil
+	}
+}

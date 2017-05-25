@@ -26,10 +26,6 @@ var (
 	red = color.New(color.FgRed).SprintFunc()
 )
 
-func printError(err string, args ...interface{}) error {
-	return fmt.Errorf(red("error: ")+err, args...)
-}
-
 func init() {
 	// Ensure that org-mode is registered as a mime type.
 	mime.AddExtensionType(".org", "text/x-org")
@@ -63,7 +59,7 @@ func getPixImage(f string) (*lpt.Pix, error) {
 	if filepath.Ext(f) == ".pdf" {
 		if cmdName, err := exec.LookPath("convert"); err == nil {
 			tmpFName := filepath.Join(os.TempDir(), filepath.Base(f)+".tif")
-			log.Printf("converting %q to %q", f, tmpFName)
+			Debugf("converting %q to %q", f, tmpFName)
 			cmd := exec.Command(cmdName, "-background", "white", "-flatten", "-alpha", "Off", "-density", fmt.Sprint(*pdfDensity), f, "-depth", "8", tmpFName)
 			out, err := cmd.CombinedOutput()
 			if err != nil {
@@ -75,7 +71,7 @@ func getPixImage(f string) (*lpt.Pix, error) {
 			return nil, printError("Unable to find convert binary %v", err)
 		}
 	}
-	log.Printf("getting pix from %q", f)
+	Debugf("getting pix from %q", f)
 	return lpt.NewPixFromFile(f)
 }
 
@@ -102,6 +98,12 @@ func ocrImageFile(file string) (string, error) {
 		return "", printError("Failed to set variable: %s\n", err)
 	}
 
+	if !*isDebug {
+		err = t.SetVariable("debug_file", *tessDebugFile)
+		if err != nil {
+			return "", printError("Failed to set variable: %s\n", err)
+		}
+	}
 	t.SetImagePix(pix)
 
 	return t.Text(), nil
@@ -183,11 +185,11 @@ func getPdfText(file string) (string, error) {
 		}
 		bs, err := ioutil.ReadFile(tmpName)
 		if err == nil && len(bs) > 80 { // Sanity check that at least 80 characters where found.
-			log.Printf("Found text of length %d in pdf", len(bs))
+			Debugf("Found text of length %d in pdf", len(bs))
 			return string(bs), nil
 		}
 	}
-	log.Printf("Unable to get text from %q with pdftotext", file)
+	Debugf("Unable to get text from %q with pdftotext", file)
 	return ocrImageFile(file)
 }
 
