@@ -169,8 +169,8 @@ type processor struct {
 	Index
 }
 
-func getMP3Text(file string) (string, error) {
-	return "mp3", nil
+func getAudioText(file string) (string, error) {
+	return "audio", nil
 }
 
 func getPdfText(file string) (string, error) {
@@ -199,8 +199,8 @@ func (p *processor) registerDefaults() {
 		"image":                  ocrImageFile,
 		"application/javascript": getPlainTextContent,
 		"application/pdf":        getPdfText,
-		"audio/mp3":              getMP3Text,
-		"audio/mp4a-latm":        getMP3Text,
+		"audio/mp3":              getAudioText,
+		"audio/mp4a-latm":        getAudioText,
 	}
 
 }
@@ -349,10 +349,10 @@ func (p *processor) Process(file string) error {
 	}
 
 	if mt == "audio/mp3" || mt == "audio/mp4a-latm" {
-		mp3 := MP3{}
-		mp3.FileData = &fd
-		mp3.Analyse()
-		ifile = &mp3
+		audio := AudioData{}
+		audio.FileData = &fd
+		audio.Analyse()
+		ifile = &audio
 	} else {
 		ifile = &fd
 	}
