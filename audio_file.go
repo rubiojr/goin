@@ -9,12 +9,12 @@ import (
 
 type AudioData struct {
 	*FileData
-	Artist string `json:"artist"`
-	Album  string `json:"album"`
-	Genre  string `json:"genre"`
-	Title  string `json:"title"`
-	Track  int    `json:"track"`
-	Year   int    `json:"year"`
+	Artist string `json:"Artist"`
+	Album  string `json:"Album"`
+	Genre  string `json:"Genre"`
+	Title  string `json:"Title"`
+	Track  int    `json:"Track"`
+	Year   int    `json:"Year"`
 }
 
 func (data *AudioData) Type() string {

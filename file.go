@@ -131,17 +131,17 @@ type IFile interface {
 
 type FileData struct {
 	// Full path to the file on disk.
-	FullPath string
+	FullPath string `json:"FullPath"`
 	// Basename of the file.
-	FileName string
+	FileName string `json:"FileName"`
 	// MimeType of the file.
-	MimeType string
+	MimeType string `json:"MimeType"`
 	// Time of last index.
-	IndexTime time.Time
+	IndexTime time.Time `json:"IndexTime"`
 	// Text content of the file.
-	Text string
+	Text string `json:"Text"`
 	// Size of the file.
-	Size int64
+	Size int64 `json:"Size"`
 }
 
 // Type satisifies the bleve.Classifier interface for FileData.
