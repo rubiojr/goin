@@ -1,4 +1,8 @@
-**Jeremy Wall's goin mirror with some fixes**
+**Jeremy Wall's goin fork with some fixes**
+
+* Audio file indexing
+* Some extra flags for the CLI
+* Less verbose output
 
 See the original repo here: https://bitbucket.org/zaphar/goin
 
