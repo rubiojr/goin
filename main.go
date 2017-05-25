@@ -15,7 +15,10 @@ import (
 
 // IndexFile indexes a single file using the provided FileProcessor
 func IndexFile(file string, p FileProcessor) {
-	log.Printf("Processing file: %q", file)
+	Debugf("Processing file: %q", file)
+	if !*isDebug {
+		fmt.Printf(".")
+	}
 	if ok, err := p.ShouldProcess(file); !ok {
 		if err != nil {
 			log.Print(err)

@@ -34,6 +34,8 @@ func init() {
 	// Ensure that org-mode is registered as a mime type.
 	mime.AddExtensionType(".org", "text/x-org")
 	mime.AddExtensionType(".org_archive", "text/x-org")
+	mime.AddExtensionType(".mp3", "audio/mp3")
+	mime.AddExtensionType(".m4a", "audio/mp4a-latm")
 }
 
 func defaultTessData() (possible string) {
@@ -118,7 +120,13 @@ func getPlainTextContent(file string) (string, error) {
 	return string(bs), nil
 }
 
+type IFile interface {
+	Type() string
+	Path() string
+}
+
 // FileData represents the data about a file to be indexed.
+
 type FileData struct {
 	// Full path to the file on disk.
 	FullPath string
@@ -139,6 +147,10 @@ func (fd *FileData) Type() string {
 	return fd.MimeType
 }
 
+func (fd *FileData) Path() string {
+	return fd.FullPath
+}
+
 // FileProcessor is the interface FileProcessors must implement to handle a file.
 type FileProcessor interface {
 	ShouldProcess(file string) (bool, error)
@@ -153,6 +165,10 @@ type processor struct {
 	hashDir                 string
 	force                   bool
 	Index
+}
+
+func getMP3Text(file string) (string, error) {
+	return "mp3", nil
 }
 
 func getPdfText(file string) (string, error) {
@@ -181,6 +197,8 @@ func (p *processor) registerDefaults() {
 		"image":                  ocrImageFile,
 		"application/javascript": getPlainTextContent,
 		"application/pdf":        getPdfText,
+		"audio/mp3":              getMP3Text,
+		"audio/mp4a-latm":        getMP3Text,
 	}
 
 }
@@ -216,7 +234,7 @@ func hashFile(file string) ([]byte, error) {
 
 func (p *processor) checkHash(file string, hash []byte) (bool, error) {
 	hashFile := path.Join(p.hashDir, hashFileName(file))
-	log.Printf("Checking for hashfile %q", hashFile)
+	Debugf("Checking for hashfile %q", hashFile)
 	if _, err := os.Stat(hashFile); os.IsNotExist(err) {
 		return false, nil
 	}
@@ -281,7 +299,7 @@ func (p *processor) ShouldProcess(file string) (bool, error) {
 		return false, err
 	}
 	if ok, _ := p.checkHash(file, h); ok {
-		log.Printf("Already indexed %q", file)
+		Debugf("Already indexed %q", file)
 		return false, nil
 	}
 	return true, nil
@@ -310,29 +328,38 @@ func (p *processor) Process(file string) error {
 	if os.IsNotExist(err) {
 		return err // In theory this will never happen
 	}
-	fd := FileData{
-		FileName: filepath.Base(file),
-		FullPath: path.Clean(file),
-		// How to index this properly?
-		IndexTime: time.Now(),
-		Size:      fi.Size(),
-	}
 	ft, mt, ok := p.checkMimeType(file)
-	if ok {
-		fd.MimeType = mt
-		fd.Text, err = ft(file)
-		if err != nil {
-			return err
-		}
-	} else {
+	if !ok {
 		return printError("unhandled file format %q", mt)
 	}
 
-	parts := strings.SplitN(mt, "/", 2)
-	log.Printf("Detected mime category: %q", parts[0])
-	log.Printf("Indexing %q", fd.FullPath)
-	if err := p.Put(&fd); err != nil {
+	var ifile IFile
+	fd := FileData{}
+	fd.FileName = filepath.Base(file)
+	fd.FullPath = path.Clean(file)
+	fd.IndexTime = time.Now()
+	fd.Size = fi.Size()
+
+	fd.MimeType = mt
+	fd.Text, err = ft(file)
+	if err != nil {
 		return err
 	}
-	return p.finishFile(fd.FullPath)
+
+	if mt == "audio/mp3" || mt == "audio/mp4a-latm" {
+		mp3 := MP3{}
+		mp3.FileData = &fd
+		mp3.Analyse()
+		ifile = &mp3
+	} else {
+		ifile = &fd
+	}
+
+	parts := strings.SplitN(mt, "/", 2)
+	Debugf("Detected mime category: %q", parts[0])
+	Debugf("Indexing %q", ifile.Path())
+	if err := p.Put(&ifile); err != nil {
+		return err
+	}
+	return p.finishFile(ifile.Path())
 }
