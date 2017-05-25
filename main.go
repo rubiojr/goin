@@ -74,6 +74,19 @@ func usage() string {
 func main() {
 	flag.Parse()
 
+	// Write annoying tesseract stderr to a file
+	// This means everything logged to stderr goes to that file unfortunately.
+	// Setting debug_file for tesseract doesn't seem to work for everything.
+	if !*isDebug {
+		os.Stderr.Close()
+		stderr, err := os.Create("/tmp/goin.err")
+		if err != nil {
+			panic(err)
+		}
+		os.Stderr = stderr
+		defer stderr.Close()
+	}
+
 	if *help {
 		fmt.Println(usage())
 		flag.PrintDefaults()
