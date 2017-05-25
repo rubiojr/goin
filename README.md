@@ -4,6 +4,8 @@
 * Some extra flags for the CLI
 * Less verbose output
 
+goin has a few dependencies that you should install manually, see [INSTALL_MACOS](INSTALL_MACOS.md) for macOS.
+
 See the original repo here: https://bitbucket.org/zaphar/goin
 
 Goin Full Text Search for your files
