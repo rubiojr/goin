@@ -199,6 +199,7 @@ func (p *processor) registerDefaults() {
 		"image":                  ocrImageFile,
 		"application/javascript": getPlainTextContent,
 		"application/json":       getPlainTextContent,
+		"application/xml":        getPlainTextContent,
 		"application/pdf":        getPdfText,
 		"audio/mp3":              getAudioText,
 		"audio/mp4a-latm":        getAudioText,
