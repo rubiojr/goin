@@ -45,6 +45,8 @@ Dependencies
 
 goin depends on the (leptonica):"http://www.leptonica.com" and (tesseract):"https://github.com/tesseract-ocr" libraries to build.
 
+You'll also need ghostscript (gs command) installed.
+
 Depending on how you install them you may have to set the CGO_CFLAGS and CGO_LDFLAGS environment variables to tell cgo where to find them.
 
 `go doc cmd/go` will give you more information on configuring cgo for your environment.
