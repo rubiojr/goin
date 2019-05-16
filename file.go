@@ -292,7 +292,7 @@ func (p *processor) ShouldProcess(file string) (bool, error) {
 	}
 	fi, err := os.Stat(file)
 	if _, mt, ok := p.checkMimeType(file); !ok {
-		return ok, printError("unhandled FileType: %q", mt)
+		return ok, printError("unhandled FileType '%q' for %s", mt, file)
 	}
 	if p.force && fi.Size() > *maxFileSize {
 		return false, printError("file too large to index %q size=(%d)", file, fi.Size())
