@@ -15,6 +15,7 @@ require (
 	github.com/etcd-io/bbolt v1.3.2 // indirect
 	github.com/fatih/color v1.5.0
 	github.com/golang/protobuf v0.0.0-20170512171634-fec3b39b059c // indirect
+	github.com/gorilla/mux v1.7.3
 	github.com/mattn/go-colorable v0.0.7 // indirect
 	github.com/mattn/go-isatty v0.0.2 // indirect
 	github.com/mitchellh/go-homedir v1.1.0

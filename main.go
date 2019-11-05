@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"mime"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -91,6 +92,11 @@ func main() {
 		fmt.Println(usage())
 		flag.PrintDefaults()
 		os.Exit(0)
+	}
+
+	if *serveHTTP {
+		startServer()
+		log.Fatal(http.ListenAndServe(":8080", nil))
 	}
 
 	if !(*isQuery) && !(*isIndex) {
