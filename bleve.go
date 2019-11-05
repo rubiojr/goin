@@ -13,6 +13,7 @@ import (
 	"github.com/blevesearch/bleve/analysis"
 	"github.com/blevesearch/bleve/analysis/char/html"
 	"github.com/blevesearch/bleve/analysis/lang/en"
+	"github.com/blevesearch/bleve/index/scorch"
 	"github.com/blevesearch/bleve/mapping"
 	"github.com/blevesearch/bleve/registry"
 	"github.com/blevesearch/bleve/search/highlight/highlighter/ansi"
@@ -90,7 +91,8 @@ func NewIndex(indexLocation string) (Index, error) {
 		mapping.AddDocumentMapping(htmlMimeType, buildHtmlDocumentMapping())
 		// TODO(jwall): Create document mappings for our custom types.
 		log.Printf("Creating new index %q", indexLocation)
-		if index, err = bleve.NewUsing(indexLocation, mapping, "scorch", "scorch", nil); err != nil {
+		bleve.Config.DefaultIndexType = scorch.Name
+		if index, err = bleve.New(indexLocation, mapping); err != nil {
 			return nil, fmt.Errorf("Error creating index %q\n", err)
 		}
 	} else {
