@@ -90,7 +90,7 @@ func NewIndex(indexLocation string) (Index, error) {
 		mapping.AddDocumentMapping(htmlMimeType, buildHtmlDocumentMapping())
 		// TODO(jwall): Create document mappings for our custom types.
 		log.Printf("Creating new index %q", indexLocation)
-		if index, err = bleve.New(indexLocation, mapping); err != nil {
+		if index, err = bleve.NewUsing(indexLocation, mapping, "scorch", "scorch", nil); err != nil {
 			return nil, fmt.Errorf("Error creating index %q\n", err)
 		}
 	} else {
