@@ -101,7 +101,7 @@ func NewIndex(indexLocation string) (Index, error) {
 		opts := map[string]interface{}{
 			"read_only": readOnly,
 		}
-		log.Printf("Opening index %q in %b mode", indexLocation, readOnly)
+		Debugf("Opening index %q (readonly: %t)\n", indexLocation, readOnly)
 		if index, err = bleve.OpenUsing(indexLocation, opts); err != nil {
 			return nil, fmt.Errorf("Error opening index %q\n", err)
 		}
