@@ -94,8 +94,15 @@ func NewIndex(indexLocation string) (Index, error) {
 			return nil, fmt.Errorf("Error creating index %q\n", err)
 		}
 	} else {
-		log.Printf("Opening index %q", indexLocation)
-		if index, err = bleve.Open(indexLocation); err != nil {
+		readOnly := false
+		if *isQuery {
+			readOnly = true
+		}
+		opts := map[string]interface{}{
+			"read_only": readOnly,
+		}
+		log.Printf("Opening index %q in %b mode", indexLocation, readOnly)
+		if index, err = bleve.OpenUsing(indexLocation, opts); err != nil {
 			return nil, fmt.Errorf("Error opening index %q\n", err)
 		}
 	}
