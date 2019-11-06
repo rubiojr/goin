@@ -7,3 +7,4 @@ A few interesting notes:
 * https://groups.google.com/forum/#!searchin/bleve/scorch|sort:date/bleve/9QAzlLMoYp0/MVGpv5LfAwAJ
 * https://github.com/blevesearch/bleve/issues/591#issuecomment-425092546
 * https://github.com/blevesearch/bleve/issues/1266
+* Read-only queries with scorch: https://github.com/blevesearch/bleve/issues/1281
